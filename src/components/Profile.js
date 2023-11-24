@@ -1,29 +1,34 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 const Profile = () => {
     const URL = "http://localhost:8000";
     const [username, setUsername] = useState('')
     const [email, setEmail] = useState('')
     const [phone, setPhone] = useState('')
+    const navigate = useNavigate()
+    const cerrarSesion = () => {
+      console.log("entrooo");
+      localStorage.removeItem('token')
+      navigate("/login")
+    }
 
     useEffect(() => {
         async function getProfile(){
-        const token = localStorage.getItem('token')
-        if(token){
-        const { data } = await axios.get(`${URL}/profile`, {
-        headers: {
-        'Authorization': `Bearer ${token}`
+          const token = localStorage.getItem('token')
+          if(token){
+            const { data } = await axios.get(`${URL}/profile`, {
+            headers: {'Authorization': `Bearer ${token}`}
+            })
+            // Acá hacen el setUsername... etc para mostrar la información real del back
+            setUsername(data.username);
+            setEmail(data.email);
+            setPhone(data.phone);
+          }
         }
-    })
-    console.log(data)
-        // Acá hacen el setUsername... etc para mostrar la información real del back
-        setUsername(data.username);
-        setEmail(data.email);
-        setPhone(data.phone);
-        }
-        }
-    getProfile()
+          getProfile()
     }, [])
+
 return (
 <>
 <div className="container mt-5">
@@ -44,7 +49,7 @@ return (
 
               </div>
               <div className="text-center">
-                <button className="btn btn-danger"> Cerrar sesión</button>
+                <button className="btn btn-danger" onClick={cerrarSesion}> Cerrar sesión</button>
               </div>
             </div>
           </div>

@@ -1,22 +1,37 @@
 import { AreaChart, XAxis, YAxis, CartesianGrid, Tooltip, Area, ResponsiveContainer } from 'recharts';
-import data from '../preciosEjemplo.json'
+import axios from 'axios';
+import { useEffect,useState } from 'react';
 
-const precios = data.prices.map((elem) => ({fecha: elem[0],precio: elem[1]}));
-
-const formatearFecha = (valor) => {
-    const fecha = new Date(valor)
-    return fecha.toLocaleDateString();
-}
-
-const formaterPrecio = (value) => {
-  const formatter = new Intl.NumberFormat('es-CL', {
-    style: 'currency',
-    currency: 'CLP',
-  });
-  return formatter.format(value);
-};
-  
 const Home = () => {
+  const URL = "http://localhost:8000";
+  const [precios, setPrecios] = useState("")
+  const getPrecios = async() => {
+    try {
+      const {data} = await axios.get(`${URL}/chart`)
+      if(data){
+        const precios = data.prices.map((elem) => ({fecha: elem[0],precio: elem[1]}));
+        setPrecios(precios)
+      }
+    } catch (error) {
+      console.log("Error al obtener los precios", error);
+    }
+  }
+  const formatearFecha = (valor) => {
+      const fecha = new Date(valor)
+      return fecha.toLocaleDateString();
+  }
+  const formaterPrecio = (value) => {
+    const formatter = new Intl.NumberFormat('es-CL', {
+      style: 'currency',
+      currency: 'CLP',
+    });
+    return formatter.format(value);
+  };
+  
+  useEffect(() => {
+    getPrecios()
+  },[]);
+
     return (
         <div style={{ width: '100%', maxWidth: '700px' }}>
           <ResponsiveContainer width="100%" height={400}>
