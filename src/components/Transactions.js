@@ -3,10 +3,32 @@ import axios from 'axios';
 
 const Transactions = () => {
     const URL = "http://localhost:8000";
-    const [saldoTotal, setsaldoTotal] = useState("")
-    const [userCLP, setUserCLP] = useState("")
-    const [userBitcoin, setUserBitcoin] = useState("")
+    const [userCLP, setUserCLP] = useState(0)
+    const [userBitcoin, setUserBitcoin] = useState(0)
     const [valorBitcoin,setValorBitcoin] = useState("")
+    const [inputBuy, setInputBuy] = useState(0)
+    const [inputSell, setInputSell] = useState(0)
+
+    const comprarBitcoins = async () => {
+        const token = localStorage.getItem('token')
+        const response = await axios.post(`${URL}/buy/` + inputBuy, {}, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+        })
+        setUserBitcoin(response.data.balanceBTC)
+        setUserCLP(response.data.balanceCLP)
+    }
+    const venderBitcoins = async () => {
+        const token = localStorage.getItem('token')
+        const response = await axios.post(`${URL}/sell/` + inputBuy, {}, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+        })
+        setUserBitcoin(response.data.balanceBTC)
+        setUserCLP(response.data.balanceCLP)
+    }
 
     const formaterBTC = (value) => {
         return parseFloat(value).toFixed(0);
@@ -30,10 +52,6 @@ const Transactions = () => {
           console.log("Error al obtener los precios", error);
         }
     }
-    //   const calcularSaldoTotal = ()=>  {
-    //     saldoTotal = (userBitcoin*valorBitcoin) + (userCLP)
-    //     setsaldoTotal(saldoTotal);
-    //   }
       useEffect(() => {
         async function saldoUser(){
             const token = localStorage.getItem('token')
@@ -73,15 +91,15 @@ const Transactions = () => {
                 </div>
                 <div className="mb-3 d-flex justify-content-start">
                     <label className="form-label">Comprar</label>
-                    <input></input>
+                    <input type="text" value={inputBuy} onChange={e => setInputBuy(e.target.value)}/>
                     <label>BTC</label>
-                    <button className="btn btn-success">Comprar</button>
+                    <button className="btn btn-success" onClick={comprarBitcoins}>Comprar</button>
                 </div>
                 <div className="mb-3 d-flex justify-content-start">
                     <label className="form-label">Vender</label>
-                    <input></input>
+                    <input type="text" value={inputSell} onChange={e => setInputSell(e.target.value)}/>
                     <label>BTC</label>
-                    <button className="btn btn-danger">Vender</button>
+                    <button className="btn btn-danger" onClick={venderBitcoins}>Vender</button>
                 </div>
                 </div>
             </div>
