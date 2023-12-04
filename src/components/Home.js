@@ -1,16 +1,19 @@
 import { AreaChart, XAxis, YAxis, CartesianGrid, Tooltip, Area, ResponsiveContainer } from 'recharts';
 import axios from 'axios';
 import { useEffect,useState } from 'react';
+import LoadingSpinner from './LoadingSpinner';
 
 const Home = () => {
   const URL = "http://localhost:8000";
   const [precios, setPrecios] = useState("")
+  const [loading, setLoading] = useState(true);
   const getPrecios = async() => {
     try {
       const {data} = await axios.get(`${URL}/chart`)
       if(data){
         const precios = data.prices.map((elem) => ({fecha: elem[0],precio: elem[1]}));
         setPrecios(precios)
+        setLoading(false)
       }
     } catch (error) {
       console.log("Error al obtener los precios", error);
@@ -33,6 +36,10 @@ const Home = () => {
   },[]);
 
     return (
+      <div>
+      {loading ? (
+        <LoadingSpinner />
+      ) : (
         <div style={{ width: '100%', maxWidth: '700px' }}>
           <ResponsiveContainer width="100%" height={400}>
           <AreaChart
@@ -54,6 +61,10 @@ const Home = () => {
           </AreaChart>
           </ResponsiveContainer>
         </div>
+      )}
+    </div>
+      
+
     );
 }
 export default Home;

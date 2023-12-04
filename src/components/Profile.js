@@ -1,15 +1,19 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
+import { AuthContext } from './AuthContext';
 const Profile = () => {
     const URL = "http://localhost:8000";
     const [username, setUsername] = useState('')
     const [email, setEmail] = useState('')
     const [phone, setPhone] = useState('')
     const navigate = useNavigate()
+    const { setIsLoggedIn } = useContext(AuthContext);
+
     const cerrarSesion = () => {
-      console.log("entrooo");
+      
       localStorage.removeItem('token')
+      setIsLoggedIn(false);
       navigate("/login")
     }
 

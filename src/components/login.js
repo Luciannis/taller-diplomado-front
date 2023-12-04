@@ -1,22 +1,23 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './login.css'
 import axios from 'axios';
+import { AuthContext } from './AuthContext';
 const Login = () => {
     const URL = "http://localhost:8000";
     const navigate = useNavigate()
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
+    const { setIsLoggedIn } = useContext(AuthContext);
 
     const onLogin = async (e) => {
       e.preventDefault();
       try {
         const { data } = await axios.post(`${URL}/login`,{username: username, password})
-        console.log(data)
         localStorage.setItem('token', data.token)
-        console.log(localStorage.getItem('token'))
 
         if(data){
+          setIsLoggedIn(true);
           navigate("/profile");
         }
 
