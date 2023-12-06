@@ -1,12 +1,16 @@
 import { AreaChart, XAxis, YAxis, CartesianGrid, Tooltip, Area, ResponsiveContainer } from 'recharts';
 import axios from 'axios';
-import { useEffect,useState } from 'react';
+import { useEffect,useState,useContext } from 'react';
 import LoadingSpinner from './LoadingSpinner';
+import { AuthContext } from './AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
   const URL = "http://localhost:8000";
   const [precios, setPrecios] = useState("")
   const [loading, setLoading] = useState(true);
+  const { isLoggedIn } = useContext(AuthContext);
+  const navigate = useNavigate();
   const getPrecios = async() => {
     try {
       const {data} = await axios.get(`${URL}/chart`)
@@ -32,8 +36,11 @@ const Home = () => {
   };
   
   useEffect(() => {
+    if (!isLoggedIn) {
+      navigate('/login'); // Redirige al componente Login si el usuario no está autenticado
+    }
     getPrecios()
-  },[]);
+  },[isLoggedIn, navigate]);
 
     return (
       <div>

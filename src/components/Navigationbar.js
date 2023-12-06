@@ -4,12 +4,6 @@ import './Navigationbar.css';
 import { AuthContext } from "./AuthContext";
 const NavigationBar = () => {
     const { isLoggedIn } = useContext(AuthContext);
-    // console.log("isLoggedIn:", isLoggedIn);
-
-    useEffect(() => {
-        const token = localStorage.getItem('token');
-        // setIsLoggedIn(!!token);
-    }, []);
 
     return(
 
