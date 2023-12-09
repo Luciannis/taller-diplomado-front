@@ -2,6 +2,9 @@ import { useEffect,useState } from "react";
 import axios from 'axios';
 import LoadingSpinner from './LoadingSpinner';
 import Alert from 'react-bootstrap/Alert';
+import Form from 'react-bootstrap/Form';
+import InputGroup from 'react-bootstrap/InputGroup';
+import Button from 'react-bootstrap/Button';
 
 const Transactions = () => {
     const URL = "http://localhost:8000";
@@ -134,22 +137,46 @@ const Transactions = () => {
                     <div className="mb-3 d-flex justify-content-start">
                         <label className="form-label">Tienes<b> {formaterPrecio(parseFloat(userCLP))} CLP </b></label>
                     </div>
-                    {/* <div className="mb-3 d-flex justify-content-start">
-                        <label className="form-label">Saldo Total <b>{formaterPrecio(parseFloat(userCLP) + userBitcoin*valorBitcoin)} pesos</b></label>
-                    </div> */}
                     <div className="mb-3 d-flex justify-content-start">
+                        <label className="form-label">Saldo Total <b>{formaterPrecio(parseFloat(userCLP) + userBitcoin*valorBitcoin)} pesos</b></label>
+                    </div>
+                    <InputGroup className="mb-3">
+                        <InputGroup.Text>Comprar</InputGroup.Text>
+                        <Form.Control
+                        aria-describedby="basic-addon2"
+                        type="text"
+                        value={inputBuy}
+                        onChange={e => setInputBuy(e.target.value)}
+                        />
+                        <Button variant="success" id="button-addon1" onClick={comprarBitcoins} disabled={(inputBuy <= 0) || (inputBuy> bitcoinsComprables)}>
+                            Comprar (-$ {formaterPrecio(parseFloat(inputBuy *valorBitcoin))})
+                        </Button>
+                    </InputGroup>
+                    {/* <div className="mb-3 d-flex justify-content-start">
                         <label className="form-label">Comprar</label>
                         <input type="text" value={inputBuy} onChange={e => setInputBuy(e.target.value)}/>
                         <label>BTC</label>
                         <button className="btn btn-success" onClick={comprarBitcoins} disabled={(inputBuy <= 0) || (inputBuy> bitcoinsComprables)}>Comprar</button>
                         <p>Puedes Comprar {formaterBTC(bitcoinsComprables)} bitcoins con tu saldo actual</p>
-                    </div>
-                    <div className="mb-3 d-flex justify-content-start">
+                    </div> */}
+                    <InputGroup className="mb-3">
+                        <InputGroup.Text>Vender</InputGroup.Text>
+                        <Form.Control
+                        aria-describedby="basic-addon2"
+                        type="text"
+                        value={inputSell}
+                        onChange={e => setInputSell(e.target.value)}
+                        />
+                        <Button variant="danger" id="button-addon1" onClick={venderBitcoins} disabled={(inputSell <= 0) || inputSell > userBitcoin}  style={{'background':'red','color':'white'}}>
+                            Vender (+ $ {formaterPrecio(parseFloat(inputSell *valorBitcoin))})
+                        </Button>
+                    </InputGroup>
+                    {/* <div className="mb-3 d-flex justify-content-start">
                         <label className="form-label">Vender</label>
                         <input type="text" value={inputSell} onChange={e => setInputSell(e.target.value)}/>
                         <label>BTC</label>
                         <button className="btn btn-danger" onClick={venderBitcoins} disabled={(inputSell <= 0) || inputSell > userBitcoin}>Vender</button>
-                    </div>
+                    </div> */}
                     </div>
                 </div>
                 </div>
